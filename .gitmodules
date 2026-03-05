@@ -1,0 +1,12 @@
+[submodule "libraries/BNM-Android"]
+	path = libraries/BNM-Android
+	url = https://github.com/ByNameModding/BNM-Android.git
+[submodule "libraries/KittyMemory"]
+	path = libraries/KittyMemory
+	url = https://github.com/MJx0/KittyMemory.git
+[submodule "libraries/ImGui"]
+	path = libraries/ImGui
+	url = https://github.com/ocornut/imgui.git
+[submodule "libraries/Dobby"]
+	path = libraries/Dobby
+	url = https://github.com/jmpews/Dobby.git

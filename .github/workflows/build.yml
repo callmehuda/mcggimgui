@@ -1,0 +1,65 @@
+name: Build ARM64 .so
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build shared library (arm64-v8a)
+    runs-on: ubuntu-latest
+
+    env:
+      NDK_VERSION: r27d
+      NDK_URL: https://dl.google.com/android/repository/android-ndk-r27d-linux.zip
+      NDK_DIR: ${{ github.workspace }}/android-ndk-r27d
+      JNI_DIR: ${{ github.workspace }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache NDK r27d
+        id: cache-ndk
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.NDK_DIR }}
+          key: android-ndk-${{ env.NDK_VERSION }}-linux
+
+      - name: Download & extract NDK r27d
+        if: steps.cache-ndk.outputs.cache-hit != 'true'
+        run: |
+          echo "Downloading NDK ${{ env.NDK_VERSION }}..."
+          wget -q "${{ env.NDK_URL }}" -O ndk.zip
+          echo "Extracting NDK..."
+          unzip -q ndk.zip -d "${{ github.workspace }}"
+          rm ndk.zip
+          echo "NDK extracted to ${{ env.NDK_DIR }}"
+
+      - name: Verify NDK
+        run: |
+          "${{ env.NDK_DIR }}/ndk-build" --version
+          echo "NDK_HOME=${{ env.NDK_DIR }}" >> $GITHUB_ENV
+
+      - name: Build with cmake (arm64-v8a)
+        working-directory: ${{ env.JNI_DIR }}
+        run: |
+          mkdir build && cd build
+          cmake .. \
+              -DCMAKE_TOOLCHAIN_FILE="${{ env.NDK_DIR }}/build/cmake/android.toolchain.cmake" \
+              -DANDROID_ABI=arm64-v8a \
+              -DANDROID_PLATFORM=android-24 \
+              -DCMAKE_BUILD_TYPE=Release
+        
+          make -j$(nproc)          
+
+      - name: Upload shared library
+        uses: actions/upload-artifact@v4
+        with:
+          name: libgwe-arm64-v8a
+          path: build/*.so
+          if-no-files-found: error
+          retention-days: 30
