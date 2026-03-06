@@ -7,8 +7,8 @@ aux_source_directory(libraries/KittyMemory/KittyMemory kittymemory-src)
 
 add_subdirectory(libraries/KittyMemory/Deps/keystone EXCLUDE_FROM_ALL)
 add_subdirectory(libraries/Dobby EXCLUDE_FROM_ALL)
-add_subdirectory(libraries/BNM-Android EXCLUDE_FROM_ALL)
-get_property(BNM_INCLUDE_DIRECTORIES TARGET BNM PROPERTY BNM_INCLUDE_DIRECTORIES)
+#add_subdirectory(libraries/BNM-Android EXCLUDE_FROM_ALL)
+#get_property(BNM_INCLUDE_DIRECTORIES TARGET BNM PROPERTY BNM_INCLUDE_DIRECTORIES)
 
 add_library(
         ${CMAKE_PROJECT_NAME}
@@ -25,7 +25,7 @@ include_directories(
         Game
         libraries/ImGui
         libraries/ImGui/backends
-        ${BNM_INCLUDE_DIRECTORIES}
+        #${BNM_INCLUDE_DIRECTORIES}
         libraries/KittyMemory/KittyMemory
         libraries/KittyMemory/Deps/Keystone/include
         libraries/Dobby/include
@@ -40,6 +40,10 @@ set(CRYPTO_LIB ${CMAKE_CURRENT_SOURCE_DIR}/compiled_libs/openssl/${CMAKE_ANDROID
 find_library(egl EGL)
 find_library(GLESV2_LIB GLESv2)
 find_library(LZ_LIB z)
+
+if (NOT DEFINED ANDROID_PLATFORM_LEVEL)
+  set(ANDROID_PLATFORM_LEVEL 24)
+endif()
 
 if (${ANDROID_PLATFORM_LEVEL} LESS 12)
     message(FATAL_ERROR "OpenGL 2 is not supported before API level 11 /
@@ -62,7 +66,7 @@ target_link_libraries(
         ${GLESV2_LIB}
         ${LZ_LIB}
         ${OPENGL_LIB}
-        BNM
+        #BNM
         keystone
         dobby_static
         android
