@@ -37,9 +37,9 @@ set(CURL_LIB ${CMAKE_CURRENT_SOURCE_DIR}/compiled_libs/curl/${CMAKE_ANDROID_ARCH
 set(OPENSSL_LIB ${CMAKE_CURRENT_SOURCE_DIR}/compiled_libs/openssl/${CMAKE_ANDROID_ARCH_ABI}/lib/libssl.a)
 set(CRYPTO_LIB ${CMAKE_CURRENT_SOURCE_DIR}/compiled_libs/openssl/${CMAKE_ANDROID_ARCH_ABI}/lib/libcrypto.a)
 
-find_library(egl EGL)
-find_library(GLESV2_LIB GLESv2)
-find_library(LZ_LIB z)
+set(egl EGL)
+set(GLESV2_LIB GLESv2)
+set(LZ_LIB z)
 
 if (NOT DEFINED ANDROID_PLATFORM_LEVEL)
   set(ANDROID_PLATFORM_LEVEL 24)
